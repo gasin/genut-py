@@ -1,11 +1,12 @@
-import trace
 import atexit
 import inspect
-import genut_py
 import os
+import trace
+
+import genut_py
+
 
 class MyLogger:
-
     def __init__(self, f):
         self.f = f
 
@@ -16,9 +17,8 @@ class MyLogger:
         self.filename = inspect.getsourcefile(self.f)
         self.funcname = self.f.__name__
         self.log = {}
-    
-    def snake_to_camel(self, snake_str: str) -> str:
 
+    def snake_to_camel(self, snake_str: str) -> str:
         is_head = True
         camel_str = ""
         for i in range(len(snake_str)):
@@ -30,11 +30,10 @@ class MyLogger:
                 is_head = True
                 continue
             camel_str += snake_str[i]
-        
+
         return camel_str
 
     def output_unit_test(self):
-
         output = f"class Test{self.snake_to_camel(self.funcname)}:\n"
         for i, (arg_dict, return_value) in enumerate(self.log.values()):
             output += f"    def test_{self.funcname}_{i}():\n"
@@ -46,28 +45,29 @@ class MyLogger:
             output += f"        expected = {return_value}\n"
             output += "\n"
             output += "        assert actual == expected"
-            output +=  "\n\n"
+            output += "\n\n"
 
         os.makedirs(".genut", exist_ok=True)
         with open(f".genut/{self.funcname}_test_class.py", "w") as output_file:
             output_file.write(output)
 
-    
     def __call__(self, *args, **keywords):
-
-        tracer = trace.Trace(trace=0,
-                             ignoredirs=[os.path.dirname(inspect.getfile(genut_py)),
-                                         os.path.dirname(inspect.getfile(trace))])
+        tracer = trace.Trace(
+            trace=0,
+            ignoredirs=[
+                os.path.dirname(inspect.getfile(genut_py)),
+                os.path.dirname(inspect.getfile(trace)),
+            ],
+        )
         return_value = tracer.runfunc(self.f, *args, *keywords)
         result = tracer.results()
         target_lines = []
         for filename, line in result.counts.keys():
             if self.filename == filename and self.start_line <= line and line < self.end_line:
                 target_lines.append(line)
-        
+
         key = tuple(sorted(target_lines))
         if key not in self.log:
             self.log[key] = (inspect.getcallargs(self.f, *args, *keywords), return_value)
 
         return return_value
-    

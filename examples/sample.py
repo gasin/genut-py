@@ -1,15 +1,18 @@
 from genut_py import MyLogger
 
+
 @MyLogger
 def f(a: int, b: int):
     c = a + b
     return c
 
+
 @MyLogger
 def g(a: int, b: int):
     if a == 0:
         return 0
-    return a-b
+    return a - b
+
 
 @MyLogger
 def ho_ho(x):
@@ -26,6 +29,7 @@ def main():
     f(2, 2)
     ho_ho(0)
     ho_ho(1)
+
 
 if __name__ == "__main__":
     main()

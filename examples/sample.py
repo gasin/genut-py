@@ -29,6 +29,13 @@ class User:
     name: str = "John"
     age: int = 19
 
+    @MyLogger
+    def check_age2(self):
+        if self.age >= 20:
+            return "method_ok"
+        else:
+            return "method_no"
+
 
 @MyLogger
 def check_age(user: User) -> str:
@@ -49,6 +56,9 @@ def main():
     check_age(user)
     user.age = 50
     check_age(user)
+    user.check_age2()
+    user2 = User()
+    user2.check_age2()
 
 
 if __name__ == "__main__":

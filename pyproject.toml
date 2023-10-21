@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "genut-py"
+version = "0.1.0"
+description = ""
+authors = ["Eiichiro Sato <gasinsato@example.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "genut_py"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+coverage = "7.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

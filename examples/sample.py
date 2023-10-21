@@ -22,6 +22,22 @@ def ho_ho(x):
         return g(1, 1)
 
 
+class User:
+    def __repr__(self):
+        return f"User(name={self.name.__repr__()}, age={self.age.__repr__()})"
+
+    name: str = "John"
+    age: int = 19
+
+
+@MyLogger
+def check_age(user: User) -> str:
+    if user.age >= 20:
+        return "ok"
+    else:
+        return "no"
+
+
 def main():
     f(1, 2)
     g(2, 2)
@@ -29,6 +45,10 @@ def main():
     f(2, 2)
     ho_ho(0)
     ho_ho(1)
+    user = User()
+    check_age(user)
+    user.age = 50
+    check_age(user)
 
 
 if __name__ == "__main__":

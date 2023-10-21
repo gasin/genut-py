@@ -38,11 +38,11 @@ class MyLogger:
         for i, (arg_dict, return_value) in enumerate(self.log.values()):
             output += f"    def test_{self.funcname}_{i}():\n"
             for arg_name, arg_value in arg_dict.items():
-                output += f"        {arg_name} = {str(arg_value)}\n"
+                output += f"        {arg_name} = {arg_value.__repr__()}\n"
             arg_names_str = ",".join(arg_dict.keys())
             output += "\n"
             output += f"        actual = {self.funcname}({arg_names_str})\n"
-            output += f"        expected = {return_value}\n"
+            output += f"        expected = {return_value.__repr__()}\n"
             output += "\n"
             output += "        assert actual == expected"
             output += "\n\n"

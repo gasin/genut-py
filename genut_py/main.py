@@ -1,7 +1,6 @@
 import trace
 import atexit
 import inspect
-import functools
 import genut_py
 import os
 
@@ -9,14 +8,13 @@ class MyLogger:
 
     def __init__(self, f):
         self.f = f
-        self.cache = {}
-        functools.update_wrapper(self, f)
 
-        atexit.register(self.generate_unit_tests)
+        atexit.register(self.output_unit_test)
 
         codes, self.start_line = inspect.getsourcelines(self.f)
         self.end_line = self.start_line + len(codes)
         self.filename = inspect.getsourcefile(self.f)
+        self.funcname = self.f.__name__
         self.log = {}
     
     def snake_to_camel(self, snake_str: str) -> str:
@@ -35,15 +33,30 @@ class MyLogger:
         
         return camel_str
 
-    def generate_unit_tests(self):
-        print(f"Class Test{self.snake_to_camel(self.f.__name__)}")
-        for k, v in self.log.items():
-            print(k)
-            print(v)
+    def output_unit_test(self):
+
+        output = f"class Test{self.snake_to_camel(self.funcname)}:\n"
+        for i, (arg_dict, return_value) in enumerate(self.log.values()):
+            output += f"    def test_{self.funcname}_{i}():\n"
+            for arg_name, arg_value in arg_dict.items():
+                output += f"        {arg_name} = {str(arg_value)}\n"
+            arg_names_str = ",".join(arg_dict.keys())
+            output += "\n"
+            output += f"        actual = {self.funcname}({arg_names_str})\n"
+            output += f"        expected = {return_value}\n"
+            output += "\n"
+            output += "        assert actual == expected"
+            output +=  "\n\n"
+
+        os.makedirs(".genut", exist_ok=True)
+        with open(f".genut/{self.funcname}_test_class.py", "w") as output_file:
+            output_file.write(output)
+
     
     def __call__(self, *args, **keywords):
 
-        tracer = trace.Trace(ignoredirs=[os.path.dirname(inspect.getfile(genut_py)),
+        tracer = trace.Trace(trace=0,
+                             ignoredirs=[os.path.dirname(inspect.getfile(genut_py)),
                                          os.path.dirname(inspect.getfile(trace))])
         return_value = tracer.runfunc(self.f, *args, *keywords)
         result = tracer.results()
@@ -54,7 +67,7 @@ class MyLogger:
         
         key = tuple(sorted(target_lines))
         if key not in self.log:
-            self.log[key] = inspect.getcallargs(self.f, *args, *keywords)
+            self.log[key] = (inspect.getcallargs(self.f, *args, *keywords), return_value)
 
         return return_value
     

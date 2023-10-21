@@ -2,7 +2,7 @@ import atexit
 import inspect
 import os
 import trace
-
+import copy
 import genut_py
 
 
@@ -59,6 +59,8 @@ class MyLogger:
                 os.path.dirname(inspect.getfile(trace)),
             ],
         )
+        callargs = copy.deepcopy(inspect.getcallargs(self.f, *args, *keywords))
+
         return_value = tracer.runfunc(self.f, *args, *keywords)
         result = tracer.results()
         target_lines = []
@@ -66,8 +68,8 @@ class MyLogger:
             if self.filename == filename and self.start_line <= line and line < self.end_line:
                 target_lines.append(line)
 
-        key = tuple(sorted(target_lines))
-        if key not in self.log:
-            self.log[key] = (inspect.getcallargs(self.f, *args, *keywords), return_value)
+        coverage = tuple(sorted(target_lines))
+        if coverage not in self.log:
+            self.log[coverage] = (callargs, return_value)
 
         return return_value

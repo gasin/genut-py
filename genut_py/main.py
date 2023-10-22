@@ -30,13 +30,10 @@ class GenUT:
 
     def camel_to_snake(self, camel_str: str) -> str:
         snake_str = ""
-        for i in range(len(camel_str)):
-            if camel_str[i].isupper():
-                if i != 0:
-                    snake_str += "_"
-                snake_str += camel_str[i].lower()
-                continue
-            snake_str += camel_str[i]
+        for i, c in enumerate(camel_str):
+            if i > 0 and c.isupper():
+                snake_str += "_"
+            snake_str += c.lower()
 
         return snake_str
 

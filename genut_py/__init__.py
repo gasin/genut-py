@@ -1,1 +1,1 @@
-from .main import MyLogger
+from .main import GenUT

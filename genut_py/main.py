@@ -6,7 +6,7 @@ import copy
 import genut_py
 
 
-class MyLogger:
+class GenUT:
     global_log = {}
 
     def __init__(self, f):

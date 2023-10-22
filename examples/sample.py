@@ -1,20 +1,20 @@
-from genut_py import MyLogger
+from genut_py import GenUT
 
 
-@MyLogger
+@GenUT
 def f(a: int, b: int):
     c = a + b
     return c
 
 
-@MyLogger
+@GenUT
 def g(a: int, b: int):
     if a == 0:
         return 0
     return a - b
 
 
-@MyLogger
+@GenUT
 def ho_ho(x):
     if x == 0:
         return g(0, 1)
@@ -29,7 +29,7 @@ class User:
     name: str = "John"
     age: int = 19
 
-    @MyLogger
+    @GenUT
     def check_age2(self):
         if self.age >= 20:
             return "method_ok"
@@ -37,7 +37,7 @@ class User:
             return "method_no"
 
 
-@MyLogger
+@GenUT
 def check_age(user: User) -> str:
     if user.age >= 20:
         return "ok"

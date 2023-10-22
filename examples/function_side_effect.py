@@ -2,12 +2,12 @@ from genut_py import GenUT
 
 
 @GenUT
-def append_list(l, x):
+def append_list(lst, x):
     if x < 0:
         return
-    l.append(x)
+    lst.append(x)
 
 
-l = [1, 2]
+lst = [1, 2]
 for i in range(-5, 5):
-    append_list(l, i)
+    append_list(lst, i)

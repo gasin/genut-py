@@ -1,8 +1,9 @@
 import atexit
+import copy
 import inspect
 import os
 import trace
-import copy
+
 import genut_py
 
 
@@ -105,7 +106,10 @@ class GenUT:
             if self.clsname is None:
                 output += f"        actual = {self.funcname}({arg_names_str})\n"
             else:
-                output += f"        actual = {camel_to_snake(self.clsname)}.{self.funcname}({arg_names_str})\n"
+                method_call_str = (
+                    f"{camel_to_snake(self.clsname)}.{self.funcname}({arg_names_str})\n"
+                )
+                output += f"        actual = {method_call_str}"
             output += f"        expected = {return_value.__repr__()}\n"
             output += "\n"
             output += "        assert actual == expected\n"

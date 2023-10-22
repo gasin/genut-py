@@ -21,19 +21,12 @@ class MyLogger:
         self.clsname = None
 
     def snake_to_camel(self, snake_str: str) -> str:
-        is_head = True
-        camel_str = ""
-        for i in range(len(snake_str)):
-            if is_head and snake_str[i].islower():
-                camel_str += snake_str[i].upper()
-                is_head = False
-                continue
-            if snake_str[i] == "_":
-                is_head = True
-                continue
-            camel_str += snake_str[i]
+        def word_to_camel(s: str):
+            if s == "":
+                return ""
+            return s[0].upper() + s[1:]
 
-        return camel_str
+        return "".join(map(word_to_camel, snake_str.split("_")))
 
     def camel_to_snake(self, camel_str: str) -> str:
         snake_str = ""

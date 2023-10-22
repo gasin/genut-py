@@ -127,3 +127,10 @@ class TestUserIsAdult:
 
         assert actual == expected
 ```
+
+## Getting Started
+
+### Installation
+```bash
+pip install genut-py
+```

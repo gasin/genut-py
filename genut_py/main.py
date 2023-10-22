@@ -35,38 +35,24 @@ def spawn_tracer():
     )
 
 
-def obj_to_dict(obj):
-    if type(obj) is dict:
-        res = {}
-        for k, v in obj.items():
-            res[k] = obj_to_dict(v)
-        return res
-    elif type(obj) is list:
-        return [obj_to_dict(item) for item in obj]
-    else:
-        return obj
-
-
-def todict(obj, classkey=None):
+def todict(obj):
     if isinstance(obj, dict):
         data = {}
         for k, v in obj.items():
-            data[k] = todict(v, classkey)
+            data[k] = todict(v)
         return data
     elif hasattr(obj, "_ast"):
         return todict(obj._ast())
     elif hasattr(obj, "__iter__") and not isinstance(obj, str):
-        return [todict(v, classkey) for v in obj]
+        return [todict(v) for v in obj]
     elif hasattr(obj, "__dict__"):
         data = dict(
             [
-                (key, todict(value, classkey))
+                (key, todict(value))
                 for key, value in obj.__dict__.items()
                 if not callable(value) and not key.startswith("_")
             ]
         )
-        if classkey is not None and hasattr(obj, "__class__"):
-            data[classkey] = obj.__class__.__name__
         return data
     else:
         return obj

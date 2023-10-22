@@ -35,6 +35,43 @@ def spawn_tracer():
     )
 
 
+def obj_to_dict(obj):
+    if type(obj) is dict:
+        res = {}
+        for k, v in obj.items():
+            res[k] = obj_to_dict(v)
+        return res
+    elif type(obj) is list:
+        return [obj_to_dict(item) for item in obj]
+    else:
+        return obj
+
+
+def todict(obj, classkey=None):
+    if isinstance(obj, dict):
+        data = {}
+        for k, v in obj.items():
+            data[k] = todict(v, classkey)
+        return data
+    elif hasattr(obj, "_ast"):
+        return todict(obj._ast())
+    elif hasattr(obj, "__iter__") and not isinstance(obj, str):
+        return [todict(v, classkey) for v in obj]
+    elif hasattr(obj, "__dict__"):
+        data = dict(
+            [
+                (key, todict(value, classkey))
+                for key, value in obj.__dict__.items()
+                if not callable(value) and not key.startswith("_")
+            ]
+        )
+        if classkey is not None and hasattr(obj, "__class__"):
+            data[classkey] = obj.__class__.__name__
+        return data
+    else:
+        return obj
+
+
 class GenUT:
     global_log = {}
 
@@ -66,7 +103,7 @@ class GenUT:
 
         output += f"class Test{snake_to_camel(clsfncname)}:\n"
         index = 0
-        for key, (arg_dict, return_value) in self.global_log.items():
+        for key, (arg_dict, return_value, modified_args) in self.global_log.items():
             if (self.filename, self.funcname) != (key[0], key[1]):
                 continue
             output += f"    def test_{clsfncname}_{index}():\n"
@@ -85,7 +122,11 @@ class GenUT:
                 output += f"        actual = {camel_to_snake(self.clsname)}.{self.funcname}({arg_names_str})\n"
             output += f"        expected = {return_value.__repr__()}\n"
             output += "\n"
-            output += "        assert actual == expected"
+            output += "        assert actual == expected\n"
+            for arg_name, value in modified_args.items():
+                if self.clsname is not None and arg_name == "self":
+                    arg_name = camel_to_snake(self.clsname)
+                output += f"        assert {arg_name} == {value}\n"
             output += "\n\n"
 
             index += 1
@@ -103,18 +144,24 @@ class GenUT:
 
         return tuple(sorted(target_lines))
 
-    def _update_global_log(self, tracer, callargs, return_value):
+    def _update_global_log(self, tracer, callargs_pre, return_value, callargs_post):
+        modified_args = {}
+        for key in callargs_pre.keys():
+            if todict(callargs_pre[key]) != todict(callargs_post[key]):
+                modified_args[key] = copy.deepcopy(callargs_post[key])
+
         coverage = self._get_coverage(tracer)
         key = (self.filename, self.funcname, coverage)
         if key not in self.global_log:
-            self.global_log[key] = (callargs, return_value)
+            self.global_log[key] = (callargs_pre, return_value, modified_args)
 
     def __call__(self, *args, **keywords):
         tracer = spawn_tracer()
-        callargs = copy.deepcopy(inspect.getcallargs(self.f, *args, *keywords))
+        callargs_pre = copy.deepcopy(inspect.getcallargs(self.f, *args, *keywords))
         return_value = tracer.runfunc(self.f, *args, *keywords)
+        callargs_post = inspect.getcallargs(self.f, *args, *keywords)
 
-        self._update_global_log(tracer, callargs, return_value)
+        self._update_global_log(tracer, callargs_pre, return_value, callargs_post)
 
         return return_value
 
@@ -123,10 +170,11 @@ class GenUT:
 
         def wrapper(*args, **keywords):
             tracer = spawn_tracer()
-            callargs = copy.deepcopy(inspect.getcallargs(self.f, instance, *args, *keywords))
+            callargs_pre = copy.deepcopy(inspect.getcallargs(self.f, instance, *args, *keywords))
             return_value = tracer.runfunc(self.f, instance, *args, *keywords)
+            callargs_post = inspect.getcallargs(self.f, instance, *args, *keywords)
 
-            self._update_global_log(tracer, callargs, return_value)
+            self._update_global_log(tracer, callargs_pre, return_value, callargs_post)
 
             return return_value
 

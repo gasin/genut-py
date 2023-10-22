@@ -1,3 +1,6 @@
+![GitHub](https://img.shields.io/github/license/gasin/genut-py)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/genut-py)
+
 # genut-py
 
 genut-py is a semi-automatic unit test generator for Python

@@ -105,7 +105,7 @@ user.is_adult()
 user2 = User(name="Tom", age=25)
 user2.is_adult()
 ```
-In default settings, the script below will be generated as `user_i_adult_test_class.py` under `.genut` directory by running the script above.
+In default settings, the script below will be generated as `user_is_adult_test_class.py` under `.genut` directory by running the script above.
 ```python
 from ..examples.method import User
 

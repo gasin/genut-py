@@ -45,7 +45,17 @@ class MyLogger:
         if self.clsname is not None:
             clsfncname = self.camel_to_snake(self.clsname) + "_" + self.funcname
 
-        output = f"class Test{self.snake_to_camel(clsfncname)}:\n"
+        import_str = "." + os.path.relpath(self.filename, os.getcwd() + "/.genut").replace(
+            "../", "."
+        ).removesuffix(".py").replace("/", ".")
+        output = ""
+        if self.clsname is None:
+            output += f"from {import_str} import {self.funcname}\n"
+        else:
+            output += f"from {import_str} import {self.clsname}\n"
+        output += "\n\n"
+
+        output += f"class Test{self.snake_to_camel(clsfncname)}:\n"
         index = 0
         for key, (arg_dict, return_value) in self.global_log.items():
             if (self.filename, self.funcname) != (key[0], key[1]):

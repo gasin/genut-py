@@ -65,13 +65,15 @@ def todict(obj):
 
 class _GenUT:
     global_log = {}
+    max_samples = None
     _is_cache_imported = False
     _is_cache_exported = False
 
     CACHE_FILE = ".genut/cache.pkl"
 
-    def __init__(self, f, use_cache=False):
+    def __init__(self, f, use_cache=False, max_samples=None):
         self.f = f
+        _GenUT.max_samples = max_samples
 
         atexit.register(self.output_unit_test)
         atexit.register(self.export_global_log)
@@ -173,6 +175,11 @@ class _GenUT:
             _GenUT.global_log[key] = (callargs_pre, return_value, modified_args)
 
     def __call__(self, *args, **keywords):
+        if _GenUT.max_samples is not None:
+            if _GenUT.max_samples == 0:
+                return self.f(*args, *keywords)
+            _GenUT.max_samples -= 1
+
         tracer = spawn_tracer()
         callargs_pre = copy.deepcopy(inspect.getcallargs(self.f, *args, *keywords))
         return_value = tracer.runfunc(self.f, *args, *keywords)
@@ -186,6 +193,10 @@ class _GenUT:
         self.clsname = owner.__name__
 
         def wrapper(*args, **keywords):
+            if _GenUT.max_samples is not None:
+                if _GenUT.max_samples == 0:
+                    return self.f(instance, *args, *keywords)
+                _GenUT.max_samples -= 1
             tracer = spawn_tracer()
             callargs_pre = copy.deepcopy(inspect.getcallargs(self.f, instance, *args, *keywords))
             return_value = tracer.runfunc(self.f, instance, *args, *keywords)
@@ -198,11 +209,11 @@ class _GenUT:
         return wrapper
 
 
-def GenUT(function=None, use_cache=False):
+def GenUT(function=None, use_cache=False, max_samples=None):
     if function:
         return _GenUT(function)
 
     def wrapper(function):
-        return _GenUT(function, use_cache=use_cache)
+        return _GenUT(function, use_cache=use_cache, max_samples=max_samples)
 
     return wrapper

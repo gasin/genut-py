@@ -90,7 +90,7 @@ class GenUT:
 
         output += f"class Test{snake_to_camel(clsfncname)}:\n"
         index = 0
-        for key, (arg_dict, return_value, modified_args) in self.global_log.items():
+        for key, (arg_dict, return_value, modified_args) in GenUT.global_log.items():
             if (self.filename, self.funcname) != (key[0], key[1]):
                 continue
             output += f"    def test_{clsfncname}_{index}():\n"
@@ -142,8 +142,8 @@ class GenUT:
 
         coverage = self._get_coverage(tracer)
         key = (self.filename, self.funcname, coverage)
-        if key not in self.global_log:
-            self.global_log[key] = (callargs_pre, return_value, modified_args)
+        if key not in GenUT.global_log:
+            GenUT.global_log[key] = (callargs_pre, return_value, modified_args)
 
     def __call__(self, *args, **keywords):
         tracer = spawn_tracer()

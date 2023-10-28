@@ -31,6 +31,7 @@ def camel_to_snake(camel_str: str) -> str:
 
 
 def spawn_tracer():
+    """spawn_tracer"""
     return trace.Trace(
         trace=0,
         ignoredirs=[
@@ -210,6 +211,8 @@ class _GenUT:
 
 
 def GenUT(function=None, use_cache=False, max_samples=None):
+    """GenUT"""
+
     if function:
         return _GenUT(function)
 

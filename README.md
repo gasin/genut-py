@@ -137,3 +137,17 @@ class TestUserIsAdult:
 ```bash
 pip install genut-py
 ```
+
+## Development
+
+### Format & Lint
+```bash
+# under /
+make check
+```
+
+### Generate Docs
+```bash
+# under /docs
+poetry run make html
+```

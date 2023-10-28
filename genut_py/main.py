@@ -5,6 +5,7 @@ import os
 import trace
 
 import genut_py
+import pickle
 
 
 def snake_to_camel(snake_str: str) -> str:
@@ -59,19 +60,38 @@ def todict(obj):
         return obj
 
 
-class GenUT:
+class _GenUT:
     global_log = {}
+    _is_cache_imported = False
+    _is_cache_exported = False
 
-    def __init__(self, f):
+    CACHE_FILE = ".genut/cache.pkl"
+
+    def __init__(self, f, use_cache=False):
         self.f = f
 
         atexit.register(self.output_unit_test)
+        atexit.register(self.export_global_log)
+
+        if use_cache and not _GenUT._is_cache_imported and os.path.isfile(_GenUT.CACHE_FILE):
+            _GenUT._is_cache_imported = True
+            with open(".genut/cache.pkl", "rb") as f:
+                _GenUT.global_log = pickle.load(f)
 
         codes, self.start_line = inspect.getsourcelines(self.f)
         self.end_line = self.start_line + len(codes)
         self.filename = inspect.getsourcefile(self.f)
         self.funcname = self.f.__name__
         self.clsname = None
+
+    def export_global_log(self):
+        if _GenUT._is_cache_exported:
+            return
+        _GenUT._is_cache_exported = True
+
+        os.makedirs(".genut", exist_ok=True)
+        with open(_GenUT.CACHE_FILE, "wb") as f:
+            pickle.dump(_GenUT.global_log, f)
 
     def output_unit_test(self):
         clsfncname = self.funcname
@@ -90,7 +110,7 @@ class GenUT:
 
         output += f"class Test{snake_to_camel(clsfncname)}:\n"
         index = 0
-        for key, (arg_dict, return_value, modified_args) in GenUT.global_log.items():
+        for key, (arg_dict, return_value, modified_args) in _GenUT.global_log.items():
             if (self.filename, self.funcname) != (key[0], key[1]):
                 continue
             output += f"    def test_{clsfncname}_{index}():\n"
@@ -142,8 +162,8 @@ class GenUT:
 
         coverage = self._get_coverage(tracer)
         key = (self.filename, self.funcname, coverage)
-        if key not in GenUT.global_log:
-            GenUT.global_log[key] = (callargs_pre, return_value, modified_args)
+        if key not in _GenUT.global_log:
+            _GenUT.global_log[key] = (callargs_pre, return_value, modified_args)
 
     def __call__(self, *args, **keywords):
         tracer = spawn_tracer()
@@ -169,3 +189,13 @@ class GenUT:
             return return_value
 
         return wrapper
+
+
+def GenUT(function=None, use_cache=False):
+    if function:
+        return _GenUT(function)
+
+    def wrapper(function):
+        return _GenUT(function, use_cache=use_cache)
+
+    return wrapper

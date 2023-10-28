@@ -1,11 +1,14 @@
 import atexit
 import copy
 import inspect
+import logging
 import os
+import pickle
 import trace
 
 import genut_py
-import pickle
+
+logger = logging.getLogger(__name__)
 
 
 def snake_to_camel(snake_str: str) -> str:
@@ -75,8 +78,12 @@ class _GenUT:
 
         if use_cache and not _GenUT._is_cache_imported and os.path.isfile(_GenUT.CACHE_FILE):
             _GenUT._is_cache_imported = True
-            with open(".genut/cache.pkl", "rb") as f:
-                _GenUT.global_log = pickle.load(f)
+            try:
+                with open(".genut/cache.pkl", "rb") as f:
+                    _GenUT.global_log = pickle.load(f)
+                logger.info("cache is loaded")
+            except AttributeError:
+                logger.warning("failed to load cache")
 
         codes, self.start_line = inspect.getsourcelines(self.f)
         self.end_line = self.start_line + len(codes)

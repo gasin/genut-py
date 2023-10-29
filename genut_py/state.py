@@ -14,6 +14,20 @@ class StateKey:
     coverage: tuple[int]
 
 
+def is_simpler_obj(old: object, new: object) -> bool:
+    """compare obj simplicity"""
+
+    new_str = str(new)
+    old_str = str(old)
+
+    if len(old_str) < len(new_str):
+        return False
+    if len(new_str) < len(old_str):
+        return True
+
+    return new_str.count("0") > old_str.count("0")
+
+
 class State:
     state: dict[StateKey, Any] = {}
 
@@ -46,7 +60,7 @@ class State:
     @classmethod
     def update(cls, filename, funcname, coverage, callargs_pre, return_value, modified_args):
         key = StateKey(filename, funcname, coverage)
-        if key not in State.state:
+        if key not in State.state or is_simpler_obj(State.state[key][0], callargs_pre):
             State.state[key] = (callargs_pre, return_value, modified_args)
 
     @classmethod

@@ -8,26 +8,9 @@ import trace
 
 import genut_py
 
+from genut_py.format import camel_to_snake, snake_to_camel
+
 logger = logging.getLogger(__name__)
-
-
-def snake_to_camel(snake_str: str) -> str:
-    def word_to_camel(s: str):
-        if s == "":
-            return ""
-        return s[0].upper() + s[1:]
-
-    return "".join(map(word_to_camel, snake_str.split("_")))
-
-
-def camel_to_snake(camel_str: str) -> str:
-    snake_str = ""
-    for i, c in enumerate(camel_str):
-        if i > 0 and c.isupper():
-            snake_str += "_"
-        snake_str += c.lower()
-
-    return snake_str
 
 
 def spawn_tracer():

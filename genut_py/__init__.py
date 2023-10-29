@@ -1,3 +1,3 @@
-from .main import GenUT
+from .genut import GenUT
 
 __all__ = ["GenUT"]

@@ -1,7 +1,7 @@
 .. _api:
 
-API Reference
-=============
+User Reference
+===============
 
 GenUT decorator
 ----------------

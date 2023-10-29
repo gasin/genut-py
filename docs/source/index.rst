@@ -10,8 +10,8 @@ Welcome to genut-py's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   api.rst
-   dev.rst
+   user.rst
+   developer.rst
 
 
 Indices and tables

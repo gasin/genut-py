@@ -3,12 +3,11 @@ import copy
 import inspect
 import logging
 import os
-import pickle
 import trace
 
 import genut_py
-
 from genut_py.format import camel_to_snake, snake_to_camel
+from genut_py.state import State
 
 logger = logging.getLogger(__name__)
 
@@ -48,43 +47,23 @@ def todict(obj):
 
 
 class _GenUT:
-    global_log = {}
+    state: State = State()
     max_samples = None
-    _is_cache_imported = False
-    _is_cache_exported = False
-
-    CACHE_FILE = ".genut/cache.pkl"
 
     def __init__(self, f, use_cache=False, max_samples=None):
         self.f = f
         _GenUT.max_samples = max_samples
 
         atexit.register(self.output_unit_test)
-        atexit.register(self.export_global_log)
+        atexit.register(self.state.save)
 
-        if use_cache and not _GenUT._is_cache_imported and os.path.isfile(_GenUT.CACHE_FILE):
-            _GenUT._is_cache_imported = True
-            try:
-                with open(".genut/cache.pkl", "rb") as f:
-                    _GenUT.global_log = pickle.load(f)
-                logger.info("cache is loaded")
-            except AttributeError:
-                logger.warning("failed to load cache")
+        _GenUT.state.load(use_cache)
 
         codes, self.start_line = inspect.getsourcelines(self.f)
         self.end_line = self.start_line + len(codes)
         self.filename = inspect.getsourcefile(self.f)
         self.funcname = self.f.__name__
         self.clsname = None
-
-    def export_global_log(self):
-        if _GenUT._is_cache_exported:
-            return
-        _GenUT._is_cache_exported = True
-
-        os.makedirs(".genut", exist_ok=True)
-        with open(_GenUT.CACHE_FILE, "wb") as f:
-            pickle.dump(_GenUT.global_log, f)
 
     def output_unit_test(self):
         clsfncname = self.funcname
@@ -103,9 +82,9 @@ class _GenUT:
 
         output += f"class Test{snake_to_camel(clsfncname)}:\n"
         index = 0
-        for key, (arg_dict, return_value, modified_args) in _GenUT.global_log.items():
-            if (self.filename, self.funcname) != (key[0], key[1]):
-                continue
+        for arg_dict, return_value, modified_args in _GenUT.state.get_items(
+            self.filename, self.funcname
+        ):
             output += f"    def test_{clsfncname}_{index}():\n"
             for arg_name, arg_value in arg_dict.items():
                 if self.clsname is not None and arg_name == "self":
@@ -147,16 +126,16 @@ class _GenUT:
 
         return tuple(sorted(target_lines))
 
-    def _update_global_log(self, tracer, callargs_pre, return_value, callargs_post):
+    def _update_state(self, tracer, callargs_pre, return_value, callargs_post):
         modified_args = {}
         for key in callargs_pre.keys():
             if todict(callargs_pre[key]) != todict(callargs_post[key]):
                 modified_args[key] = copy.deepcopy(callargs_post[key])
 
         coverage = self._get_coverage(tracer)
-        key = (self.filename, self.funcname, coverage)
-        if key not in _GenUT.global_log:
-            _GenUT.global_log[key] = (callargs_pre, return_value, modified_args)
+        _GenUT.state.update(
+            self.filename, self.funcname, coverage, callargs_pre, return_value, modified_args
+        )
 
     def __call__(self, *args, **keywords):
         if _GenUT.max_samples is not None:
@@ -169,7 +148,7 @@ class _GenUT:
         return_value = tracer.runfunc(self.f, *args, *keywords)
         callargs_post = inspect.getcallargs(self.f, *args, *keywords)
 
-        self._update_global_log(tracer, callargs_pre, return_value, callargs_post)
+        self._update_state(tracer, callargs_pre, return_value, callargs_post)
 
         return return_value
 
@@ -186,7 +165,7 @@ class _GenUT:
             return_value = tracer.runfunc(self.f, instance, *args, *keywords)
             callargs_post = inspect.getcallargs(self.f, instance, *args, *keywords)
 
-            self._update_global_log(tracer, callargs_pre, return_value, callargs_post)
+            self._update_state(tracer, callargs_pre, return_value, callargs_post)
 
             return return_value
 

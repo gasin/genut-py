@@ -12,6 +12,16 @@ genut module
     :private-members:
     :inherited-members:
 
+state module
+----------------
+
+.. automodule:: state
+    :members:
+    :undoc-members:
+    :private-members:
+    :inherited-members:
+
+
 format module
 ----------------
 

@@ -30,3 +30,13 @@ format module
     :undoc-members:
     :private-members:
     :inherited-members:
+
+
+trace module
+----------------
+
+.. automodule:: trace
+    :members:
+    :undoc-members:
+    :private-members:
+    :inherited-members:

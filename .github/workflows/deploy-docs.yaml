@@ -1,0 +1,44 @@
+name: Deploy to gh-pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    permissions:
+      contents: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install and configure Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.5.1
+    
+    - name: Install pyproject
+      run: poetry install --without dev
+    
+    - name: Deploy docs
+      run: |
+        git config user.name gasin
+        git config user.email 7404299+gasin@users.noreply.github.com
+        git fetch origin gh-pages
+        git switch gh-pages
+        git reset --hard origin/main
+        cd docs
+        poetry run make html
+        cp -r build/html/* .
+        touch .nojekyll
+        git add .
+        git commit -m "docs"
+        git push -f origin gh-pages

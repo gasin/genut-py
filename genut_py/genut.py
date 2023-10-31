@@ -105,15 +105,6 @@ class _GenUT:
         with open(f".genut/{clsfncname}_test_class.py", "w") as output_file:
             output_file.write(output)
 
-    def _get_coverage(self, tracer):
-        result = tracer.results()
-        target_lines = []
-        for filename, line in result.counts.keys():
-            if self.filename == filename and self.start_line <= line and line < self.end_line:
-                target_lines.append(line)
-
-        return tuple(sorted(target_lines))
-
     def _update_state(self, trace_id, callargs_pre, return_value, callargs_post):
         modified_args = {}
         for key in callargs_pre.keys():
@@ -139,6 +130,8 @@ class _GenUT:
 
         self._update_state(trace_id, callargs_pre, return_value, callargs_post)
 
+        _GenUT.tracer.delete(trace_id)
+
         return return_value
 
     def __get__(self, instance, owner):
@@ -155,6 +148,8 @@ class _GenUT:
             callargs_post = inspect.getcallargs(self.f, instance, *args, *keywords)
 
             self._update_state(trace_id, callargs_pre, return_value, callargs_post)
+
+            _GenUT.tracer.delete(trace_id)
 
             return return_value
 

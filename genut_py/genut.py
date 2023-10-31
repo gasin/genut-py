@@ -111,7 +111,7 @@ class _GenUT:
             if todict(callargs_pre[key]) != todict(callargs_post[key]):
                 modified_args[key] = copy.deepcopy(callargs_post[key])
 
-        coverage = tuple(sorted(_GenUT.tracer.get_coverage(trace_id)))
+        coverage = _GenUT.tracer.get_coverage(trace_id)
 
         _GenUT.state.update(
             self.filename, self.funcname, coverage, callargs_pre, return_value, modified_args

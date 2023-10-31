@@ -1,18 +1,19 @@
 import sys
+import dataclasses
 
 
+@dataclasses.dataclass
 class FuncTrace:
-    def __init__(self, filename, line_start, line_end):
-        self.filename = filename
-        self.line_start = line_start
-        self.line_end = line_end
-        self.coverage = set()
+    filename: str
+    line_start: int
+    line_end: int
+    coverage: int = 0
 
     def update(self, frame):
         if self.filename != frame.f_code.co_filename:
             return
         if self.line_start <= frame.f_lineno and frame.f_lineno < self.line_end:
-            self.coverage.add(frame.f_lasti)
+            self.coverage |= 1 << frame.f_lasti
 
 
 class Tracer:

@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class StateKey:
     filename: str
     funcname: str
-    coverage: tuple[int]
+    coverage: int
 
 
 def is_simpler_obj(old: object, new: object) -> bool:

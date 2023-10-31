@@ -3,24 +3,12 @@ import copy
 import inspect
 import logging
 import os
-import trace
 
-import genut_py
 from genut_py.format import camel_to_snake, snake_to_camel
 from genut_py.state import State
+from genut_py.trace import Tracer
 
 logger = logging.getLogger(__name__)
-
-
-def spawn_tracer():
-    """spawn_tracer"""
-    return trace.Trace(
-        trace=0,
-        ignoredirs=[
-            os.path.dirname(inspect.getfile(genut_py)),
-            os.path.dirname(inspect.getfile(trace)),
-        ],
-    )
 
 
 def todict(obj):
@@ -48,6 +36,7 @@ def todict(obj):
 
 class _GenUT:
     state: State = State()
+    tracer: Tracer = Tracer()
     max_samples = None
 
     def __init__(self, f, use_cache=False, max_samples=None):
@@ -126,13 +115,14 @@ class _GenUT:
 
         return tuple(sorted(target_lines))
 
-    def _update_state(self, tracer, callargs_pre, return_value, callargs_post):
+    def _update_state(self, trace_id, callargs_pre, return_value, callargs_post):
         modified_args = {}
         for key in callargs_pre.keys():
             if todict(callargs_pre[key]) != todict(callargs_post[key]):
                 modified_args[key] = copy.deepcopy(callargs_post[key])
 
-        coverage = self._get_coverage(tracer)
+        coverage = tuple(sorted(_GenUT.tracer.get_coverage(trace_id)))
+
         _GenUT.state.update(
             self.filename, self.funcname, coverage, callargs_pre, return_value, modified_args
         )
@@ -143,12 +133,12 @@ class _GenUT:
                 return self.f(*args, *keywords)
             _GenUT.max_samples -= 1
 
-        tracer = spawn_tracer()
+        trace_id = _GenUT.tracer.register(self.filename, self.start_line, self.end_line)
         callargs_pre = copy.deepcopy(inspect.getcallargs(self.f, *args, *keywords))
-        return_value = tracer.runfunc(self.f, *args, *keywords)
+        return_value = self.f(*args, *keywords)
         callargs_post = inspect.getcallargs(self.f, *args, *keywords)
 
-        self._update_state(tracer, callargs_pre, return_value, callargs_post)
+        self._update_state(trace_id, callargs_pre, return_value, callargs_post)
 
         return return_value
 
@@ -160,12 +150,12 @@ class _GenUT:
                 if _GenUT.max_samples == 0:
                     return self.f(instance, *args, *keywords)
                 _GenUT.max_samples -= 1
-            tracer = spawn_tracer()
+            trace_id = _GenUT.tracer.register(self.filename, self.start_line, self.end_line)
             callargs_pre = copy.deepcopy(inspect.getcallargs(self.f, instance, *args, *keywords))
-            return_value = tracer.runfunc(self.f, instance, *args, *keywords)
+            return_value = self.f(instance, *args, *keywords)
             callargs_post = inspect.getcallargs(self.f, instance, *args, *keywords)
 
-            self._update_state(tracer, callargs_pre, return_value, callargs_post)
+            self._update_state(trace_id, callargs_pre, return_value, callargs_post)
 
             return return_value
 

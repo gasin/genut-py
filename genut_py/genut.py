@@ -173,7 +173,28 @@ class _GenUT:
 
 
 def GenUT(function=None, use_cache=False, max_samples=None):
-    """GenUT"""
+    """Decorator to generate unit tests from execution
+
+    Args:
+        use_cache: if True, restart from previous execution
+        max_samples: if number of samples reaches max_samples, stop tracing
+
+    Examples:
+        decorator of function
+
+        >>> @GenUT
+        >>> def add(a, b):
+        >>>     return a + b
+
+        decorator of method
+
+        >>> class User:
+        >>>     name: str
+        >>>
+        >>>     @GenUT(use_cache=True, max_samples=True)
+        >>>     def call_name(self):
+        >>>         print(self.name)
+    """
 
     if function:
         return _GenUT(function)

@@ -37,11 +37,10 @@ def todict(obj):
 class _GenUT:
     state: State = State()
     tracer: Tracer = Tracer()
-    max_samples = None
 
     def __init__(self, f, use_cache=False, max_samples=None):
         self.f = f
-        _GenUT.max_samples = max_samples
+        self.max_samples = max_samples
 
         atexit.register(self.output_unit_test)
         atexit.register(self.state.save)
@@ -128,10 +127,10 @@ class _GenUT:
         )
 
     def __call__(self, *args, **keywords):
-        if _GenUT.max_samples is not None:
-            if _GenUT.max_samples == 0:
+        if self.max_samples is not None:
+            if self.max_samples == 0:
                 return self.f(*args, *keywords)
-            _GenUT.max_samples -= 1
+            self.max_samples -= 1
 
         trace_id = _GenUT.tracer.register(self.filename, self.start_line, self.end_line)
         callargs_pre = copy.deepcopy(inspect.getcallargs(self.f, *args, *keywords))
@@ -146,10 +145,10 @@ class _GenUT:
         self.clsname = owner.__name__
 
         def wrapper(*args, **keywords):
-            if _GenUT.max_samples is not None:
-                if _GenUT.max_samples == 0:
+            if self.max_samples is not None:
+                if self.max_samples == 0:
                     return self.f(instance, *args, *keywords)
-                _GenUT.max_samples -= 1
+                self.max_samples -= 1
             trace_id = _GenUT.tracer.register(self.filename, self.start_line, self.end_line)
             callargs_pre = copy.deepcopy(inspect.getcallargs(self.f, instance, *args, *keywords))
             return_value = self.f(instance, *args, *keywords)

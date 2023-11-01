@@ -2,7 +2,6 @@ import atexit
 import copy
 import inspect
 import logging
-import os
 
 from genut_py.format import camel_to_snake, snake_to_camel
 from genut_py.state import State
@@ -22,13 +21,18 @@ def todict(obj):
     elif hasattr(obj, "__iter__") and not isinstance(obj, str):
         return [todict(v) for v in obj]
     elif hasattr(obj, "__dict__"):
-        data = dict(
-            [
-                (key, todict(value))
-                for key, value in obj.__dict__.items()
-                if not callable(value) and not key.startswith("_")
-            ]
-        )
+        data = {
+            key: todict(value)
+            for key, value in obj.__dict__.items()
+            if not callable(value) and not key.startswith("_")
+        }
+        return data
+    elif hasattr(obj, "__slots__"):
+        data = {
+            slot: todict(getattr(obj, slot))
+            for slot in obj.__slots__
+            if not slot.startswith("_") and not callable(getattr(obj, slot))
+        }
         return data
     else:
         return obj

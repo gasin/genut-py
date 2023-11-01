@@ -2,7 +2,7 @@ from genut_py import GenUT
 import dataclasses
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(slots=True)
 class User:
     name: str
     age: int

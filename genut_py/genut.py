@@ -59,14 +59,13 @@ class _GenUT:
         if self.clsname is not None:
             clsfncname = camel_to_snake(self.clsname) + "_" + self.funcname
 
-        import_str = "." + os.path.relpath(self.filename, os.getcwd() + "/.genut").replace(
-            "../", "."
-        ).removesuffix(".py").replace("/", ".")
+        filename = self.filename.split("/")[-1].removesuffix(".py")
+        test_path = "/".join(self.filename.split("/")[:-1]) + f"/test_{filename}_{clsfncname}.py"
         output = ""
         if self.clsname is None:
-            output += f"from {import_str} import {self.funcname}\n"
+            output += f"from {filename} import {self.funcname}\n"
         else:
-            output += f"from {import_str} import {self.clsname}\n"
+            output += f"from {filename} import {self.clsname}\n"
         output += "\n\n"
 
         output += f"class Test{snake_to_camel(clsfncname)}:\n"
@@ -102,8 +101,7 @@ class _GenUT:
 
             index += 1
 
-        os.makedirs(".genut", exist_ok=True)
-        with open(f".genut/{clsfncname}_test_class.py", "w") as output_file:
+        with open(test_path, "w") as output_file:
             output_file.write(output)
 
     def _update_state(self, trace_id, callargs_pre, return_value, callargs_post):

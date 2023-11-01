@@ -1,20 +1,20 @@
 from genut_py import GenUT
+import dataclasses
 
 
+@dataclasses.dataclass
 class User:
-    def __repr__(self):
-        return f"User(name={self.name.__repr__()}, age={self.age.__repr__()})"
-
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+    name: str
+    age: int
 
     @GenUT
     def update_age(self, age):
         if age == self.age:
-            return
+            return self.age
         self.age = age
+        return self.age
 
 
 user = User(name="John", age=19)
+user.update_age(20)
 user.update_age(20)

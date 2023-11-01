@@ -1,11 +1,9 @@
 from genut_py import GenUT
 
 
-@GenUT
+@GenUT(line_trace=False)
 def compare(x, y):
-    if x < y:
-        return -1
-    if x == y:
+    if x < y or x == y:
         return 0
     if x > y:
         return 1

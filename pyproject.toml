@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "genut-py"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["Eiichiro Sato <gasinsato@example.com>"]
 license = "MIT"

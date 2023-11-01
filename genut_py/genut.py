@@ -38,7 +38,7 @@ class _GenUT:
     state: State = State()
     tracer: Tracer = Tracer()
 
-    def __init__(self, f, use_cache=False, max_samples=None):
+    def __init__(self, f, use_cache=False, max_samples=None, line_trace=True):
         self.f = f
         self.max_samples = max_samples
 
@@ -52,6 +52,7 @@ class _GenUT:
         self.filename = inspect.getsourcefile(self.f)
         self.funcname = self.f.__name__
         self.clsname = None
+        self.is_line = line_trace
 
     def output_unit_test(self):
         clsfncname = self.funcname
@@ -123,7 +124,9 @@ class _GenUT:
                 return self.f(*args, *keywords)
             self.max_samples -= 1
 
-        trace_id = _GenUT.tracer.register(self.filename, self.start_line, self.end_line)
+        trace_id = _GenUT.tracer.register(
+            self.filename, self.start_line, self.end_line, self.is_line
+        )
         callargs_pre = copy.deepcopy(inspect.getcallargs(self.f, *args, *keywords))
         return_value = self.f(*args, *keywords)
         callargs_post = inspect.getcallargs(self.f, *args, *keywords)
@@ -142,7 +145,9 @@ class _GenUT:
                 if self.max_samples == 0:
                     return self.f(instance, *args, *keywords)
                 self.max_samples -= 1
-            trace_id = _GenUT.tracer.register(self.filename, self.start_line, self.end_line)
+            trace_id = _GenUT.tracer.register(
+                self.filename, self.start_line, self.end_line, self.is_line
+            )
             callargs_pre = copy.deepcopy(inspect.getcallargs(self.f, instance, *args, *keywords))
             return_value = self.f(instance, *args, *keywords)
             callargs_post = inspect.getcallargs(self.f, instance, *args, *keywords)
@@ -156,12 +161,13 @@ class _GenUT:
         return wrapper
 
 
-def GenUT(function=None, use_cache=False, max_samples=None):
+def GenUT(function=None, use_cache=False, max_samples=None, line_trace=True):
     """Decorator to generate unit tests from execution
 
     Args:
         use_cache: if True, restart from previous execution
         max_samples: if number of samples reaches max_samples, stop tracing
+        line_trace: use line trace instead of bytecode trace
 
     Examples:
         decorator of function
@@ -184,6 +190,8 @@ def GenUT(function=None, use_cache=False, max_samples=None):
         return _GenUT(function)
 
     def wrapper(function):
-        return _GenUT(function, use_cache=use_cache, max_samples=max_samples)
+        return _GenUT(
+            function, use_cache=use_cache, max_samples=max_samples, line_trace=line_trace
+        )
 
     return wrapper

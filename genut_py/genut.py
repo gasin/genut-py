@@ -74,7 +74,7 @@ class _GenUT:
         for arg_dict, return_value, modified_args in _GenUT.state.get_items(
             self.filename, self.funcname
         ):
-            output += f"    def test_{clsfncname}_{index}():\n"
+            output += f"    def test_{clsfncname}_{index}(self):\n"
             for arg_name, arg_value in arg_dict.items():
                 if self.clsname is not None and arg_name == "self":
                     output += f"        {camel_to_snake(self.clsname)} = {arg_value.__repr__()}\n"

@@ -1,5 +1,5 @@
-import sys
 import dataclasses
+import sys
 
 
 @dataclasses.dataclass

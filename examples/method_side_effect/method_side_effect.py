@@ -1,5 +1,6 @@
-from genut_py import GenUT
 import dataclasses
+
+from genut_py import GenUT
 
 
 @dataclasses.dataclass(slots=True)

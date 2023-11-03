@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Reference &mdash; genut-py  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="User Reference" href="user.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            genut-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user.html">User Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-genut">genut module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#genut.GenUT"><code class="docutils literal notranslate"><span class="pre">GenUT()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#genut._GenUT"><code class="docutils literal notranslate"><span class="pre">_GenUT</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#genut._GenUT._update_state"><code class="docutils literal notranslate"><span class="pre">_GenUT._update_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genut._GenUT.output_unit_test"><code class="docutils literal notranslate"><span class="pre">_GenUT.output_unit_test()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genut._GenUT.state"><code class="docutils literal notranslate"><span class="pre">_GenUT.state</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genut._GenUT.tracer"><code class="docutils literal notranslate"><span class="pre">_GenUT.tracer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#genut.todict"><code class="docutils literal notranslate"><span class="pre">todict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-state">state module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#state.State"><code class="docutils literal notranslate"><span class="pre">State</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#state.State.CACHE_FILE"><code class="docutils literal notranslate"><span class="pre">State.CACHE_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#state.State._is_loaded"><code class="docutils literal notranslate"><span class="pre">State._is_loaded</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#state.State._is_saved"><code class="docutils literal notranslate"><span class="pre">State._is_saved</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#state.State.get_items"><code class="docutils literal notranslate"><span class="pre">State.get_items()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#state.State.load"><code class="docutils literal notranslate"><span class="pre">State.load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#state.State.save"><code class="docutils literal notranslate"><span class="pre">State.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#state.State.state"><code class="docutils literal notranslate"><span class="pre">State.state</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#state.State.update"><code class="docutils literal notranslate"><span class="pre">State.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#state.StateKey"><code class="docutils literal notranslate"><span class="pre">StateKey</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#state.StateKey.coverage"><code class="docutils literal notranslate"><span class="pre">StateKey.coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#state.StateKey.filename"><code class="docutils literal notranslate"><span class="pre">StateKey.filename</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#state.StateKey.funcname"><code class="docutils literal notranslate"><span class="pre">StateKey.funcname</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#state.is_simpler_obj"><code class="docutils literal notranslate"><span class="pre">is_simpler_obj()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-format">format module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#format.camel_to_snake"><code class="docutils literal notranslate"><span class="pre">camel_to_snake()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#format.snake_to_camel"><code class="docutils literal notranslate"><span class="pre">snake_to_camel()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-trace">trace module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#trace.FuncTrace"><code class="docutils literal notranslate"><span class="pre">FuncTrace</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#trace.FuncTrace.coverage"><code class="docutils literal notranslate"><span class="pre">FuncTrace.coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.FuncTrace.filename"><code class="docutils literal notranslate"><span class="pre">FuncTrace.filename</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.FuncTrace.is_line"><code class="docutils literal notranslate"><span class="pre">FuncTrace.is_line</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.FuncTrace.line_end"><code class="docutils literal notranslate"><span class="pre">FuncTrace.line_end</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.FuncTrace.line_start"><code class="docutils literal notranslate"><span class="pre">FuncTrace.line_start</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.FuncTrace.update"><code class="docutils literal notranslate"><span class="pre">FuncTrace.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#trace.Tracer"><code class="docutils literal notranslate"><span class="pre">Tracer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#trace.Tracer._index"><code class="docutils literal notranslate"><span class="pre">Tracer._index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.Tracer.delete"><code class="docutils literal notranslate"><span class="pre">Tracer.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.Tracer.func_traces"><code class="docutils literal notranslate"><span class="pre">Tracer.func_traces</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.Tracer.get_coverage"><code class="docutils literal notranslate"><span class="pre">Tracer.get_coverage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.Tracer.is_line_trace"><code class="docutils literal notranslate"><span class="pre">Tracer.is_line_trace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.Tracer.is_opcode_trace"><code class="docutils literal notranslate"><span class="pre">Tracer.is_opcode_trace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.Tracer.register"><code class="docutils literal notranslate"><span class="pre">Tracer.register()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trace.Tracer.trace"><code class="docutils literal notranslate"><span class="pre">Tracer.trace()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">genut-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Developer Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/developer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="developer-reference">
+<span id="dev"></span><h1>Developer Reference<a class="headerlink" href="#developer-reference" title="Link to this heading"></a></h1>
+<section id="module-genut">
+<span id="genut-module"></span><h2>genut module<a class="headerlink" href="#module-genut" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="genut.GenUT">
+<span class="sig-prename descclassname"><span class="pre">genut.</span></span><span class="sig-name descname"><span class="pre">GenUT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_trace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genut.GenUT" title="Link to this definition"></a></dt>
+<dd><p>Decorator to generate unit tests from execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>use_cache</strong> – if True, restart from previous execution</p></li>
+<li><p><strong>max_samples</strong> – if number of samples reaches max_samples, stop tracing</p></li>
+<li><p><strong>line_trace</strong> – use line trace instead of bytecode trace</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>decorator of function</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@GenUT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>decorator of method</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nd">@GenUT</span><span class="p">(</span><span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_samples</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">def</span> <span class="nf">call_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="genut._GenUT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">genut.</span></span><span class="sig-name descname"><span class="pre">_GenUT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_trace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genut._GenUT" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="genut._GenUT._update_state">
+<span class="sig-name descname"><span class="pre">_update_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trace_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callargs_pre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callargs_post</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genut._GenUT._update_state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="genut._GenUT.output_unit_test">
+<span class="sig-name descname"><span class="pre">output_unit_test</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#genut._GenUT.output_unit_test" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genut._GenUT.state">
+<span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">State</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;genut_py.state.State</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#genut._GenUT.state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="genut._GenUT.tracer">
+<span class="sig-name descname"><span class="pre">tracer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tracer</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;genut_py.trace.Tracer</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#genut._GenUT.tracer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="genut.todict">
+<span class="sig-prename descclassname"><span class="pre">genut.</span></span><span class="sig-name descname"><span class="pre">todict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#genut.todict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-state">
+<span id="state-module"></span><h2>state module<a class="headerlink" href="#module-state" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="state.State">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">state.</span></span><span class="sig-name descname"><span class="pre">State</span></span><a class="headerlink" href="#state.State" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="state.State.CACHE_FILE">
+<span class="sig-name descname"><span class="pre">CACHE_FILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.genut/cache.pkl'</span></em><a class="headerlink" href="#state.State.CACHE_FILE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="state.State._is_loaded">
+<span class="sig-name descname"><span class="pre">_is_loaded</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#state.State._is_loaded" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="state.State._is_saved">
+<span class="sig-name descname"><span class="pre">_is_saved</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#state.State._is_saved" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="state.State.get_items">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">funcname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#state.State.get_items" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="state.State.load">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#state.State.load" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="state.State.save">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#state.State.save" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="state.State.state">
+<span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#state.StateKey" title="state.StateKey"><span class="pre">StateKey</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#state.State.state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="state.State.update">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">funcname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callargs_pre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modified_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#state.State.update" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="state.StateKey">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">state.</span></span><span class="sig-name descname"><span class="pre">StateKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">funcname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#state.StateKey" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="state.StateKey.coverage">
+<span class="sig-name descname"><span class="pre">coverage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#state.StateKey.coverage" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="state.StateKey.filename">
+<span class="sig-name descname"><span class="pre">filename</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#state.StateKey.filename" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="state.StateKey.funcname">
+<span class="sig-name descname"><span class="pre">funcname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#state.StateKey.funcname" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="state.is_simpler_obj">
+<span class="sig-prename descclassname"><span class="pre">state.</span></span><span class="sig-name descname"><span class="pre">is_simpler_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#state.is_simpler_obj" title="Link to this definition"></a></dt>
+<dd><p>compare obj simplicity</p>
+</dd></dl>
+
+</section>
+<section id="module-format">
+<span id="format-module"></span><h2>format module<a class="headerlink" href="#module-format" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="format.camel_to_snake">
+<span class="sig-prename descclassname"><span class="pre">format.</span></span><span class="sig-name descname"><span class="pre">camel_to_snake</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">camel_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#format.camel_to_snake" title="Link to this definition"></a></dt>
+<dd><p>Convert camel case to snake case</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>camel_str</strong> – Camel case string</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string converted to snake case</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="format.snake_to_camel">
+<span class="sig-prename descclassname"><span class="pre">format.</span></span><span class="sig-name descname"><span class="pre">snake_to_camel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snake_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#format.snake_to_camel" title="Link to this definition"></a></dt>
+<dd><p>Convert snake case to camel case</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>snake_str</strong> – Snake case string</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string converted to camel case</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-trace">
+<span id="trace-module"></span><h2>trace module<a class="headerlink" href="#module-trace" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="trace.FuncTrace">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">trace.</span></span><span class="sig-name descname"><span class="pre">FuncTrace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#trace.FuncTrace" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="trace.FuncTrace.coverage">
+<span class="sig-name descname"><span class="pre">coverage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#trace.FuncTrace.coverage" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="trace.FuncTrace.filename">
+<span class="sig-name descname"><span class="pre">filename</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#trace.FuncTrace.filename" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="trace.FuncTrace.is_line">
+<span class="sig-name descname"><span class="pre">is_line</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#trace.FuncTrace.is_line" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="trace.FuncTrace.line_end">
+<span class="sig-name descname"><span class="pre">line_end</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#trace.FuncTrace.line_end" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="trace.FuncTrace.line_start">
+<span class="sig-name descname"><span class="pre">line_start</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#trace.FuncTrace.line_start" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trace.FuncTrace.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#trace.FuncTrace.update" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="trace.Tracer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">trace.</span></span><span class="sig-name descname"><span class="pre">Tracer</span></span><a class="headerlink" href="#trace.Tracer" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="trace.Tracer._index">
+<span class="sig-name descname"><span class="pre">_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#trace.Tracer._index" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trace.Tracer.delete">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#trace.Tracer.delete" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="trace.Tracer.func_traces">
+<span class="sig-name descname"><span class="pre">func_traces</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#trace.FuncTrace" title="trace.FuncTrace"><span class="pre">FuncTrace</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#trace.Tracer.func_traces" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trace.Tracer.get_coverage">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_coverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#trace.Tracer.get_coverage" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="trace.Tracer.is_line_trace">
+<span class="sig-name descname"><span class="pre">is_line_trace</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#trace.Tracer.is_line_trace" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="trace.Tracer.is_opcode_trace">
+<span class="sig-name descname"><span class="pre">is_opcode_trace</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#trace.Tracer.is_opcode_trace" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trace.Tracer.register">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_line</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#trace.Tracer.register" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="trace.Tracer.trace">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#trace.Tracer.trace" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="user.html" class="btn btn-neutral float-left" title="User Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, gasin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
